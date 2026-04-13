@@ -1,281 +1,136 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Menu, X, ChevronDown, Sun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ToursDropdown } from './ToursDropdown';
-import { AboutDropdown } from './AboutDropdown';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export function Navbar() {
-  const { language, setLanguage, t } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const { theme, toggleTheme, mounted } = useTheme();
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+  const isDark = mounted && theme === 'dark';
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-
+    const handleScroll = () => setScrolled(window.scrollY > 80);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToSection = (id: string) => {
-    if (window.location.pathname !== '/') {
-      window.location.href = `/#${id}`;
-      return;
-    }
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setMobileMenuOpen(false);
-      setActiveDropdown(null);
-    }
+  const handleWhatsApp = () => {
+    const phone = '51987654321';
+    const msg = language === 'es' 
+      ? '¡Hola! Quiero más información sobre sus tours de lujo.'
+      : 'Hello! I would like more information about your luxury tours.';
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-white/98 dark:bg-[#1F120A]/98 backdrop-blur-xl shadow-lg'
-          : 'bg-white/95 dark:bg-[#1F120A]/95 backdrop-blur-md shadow-sm'
-      }`}
-    >
-      <div className="container mx-auto px-4 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          <Link href="/">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-              className="flex items-center space-x-3 cursor-pointer group"
-            >
-              <div className="relative w-16 h-16 group-hover:scale-110 transition-all duration-300">
-                <Image
-                  src="/logo.png"
-                  alt="Amaiatours Logo"
-                  fill
-                  className="object-contain"
-                  priority
-                />
-              </div>
-              <div>
-                <span className="text-2xl font-bold bg-gradient-to-r from-[#C62828] via-[#D32F2F] to-[#B71C1C] bg-clip-text text-transparent">
-                  Amaiatours
-                </span>
-                <p className="text-xs text-stone-500 dark:text-stone-400 -mt-1">Authentic Peru</p>
-              </div>
-            </motion.div>
-          </Link>
+    <nav className="fixed top-0 left-0 right-0 z-50">
 
-          <div className="hidden lg:flex items-center space-x-1">
-            <Link
-              href="/"
-              className="px-4 py-2 text-stone-700 dark:text-stone-300 hover:text-[#C62828] font-medium transition-all duration-200 hover:bg-[#C62828]/10 dark:hover:bg-[#C62828]/20 rounded-lg"
-            >
-              {t.nav.home}
+      {/* ==================== NAVBAR PRINCIPAL ==================== */}
+      <div className={`transition-all duration-300 border-b ${isDark ? 'bg-black' : 'bg-white shadow-sm'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-4 group">
+              <Image 
+                src="/logovacio-new.png" 
+                alt="AMAIA TOURS" 
+                width={140} 
+                height={140} 
+                className="h-20 w-auto transition-transform group-hover:scale-105" 
+                priority 
+              />
+              <div className="flex flex-col leading-none">
+                <span className={`text-4xl font-bold tracking-[-2px] ${isDark ? 'text-white' : 'text-[#3F2A1F]'}`}>AMAIA</span>
+                <span className="text-2xl font-light tracking-[3px] text-[#FF9F1C]">TOURS</span>
+              </div>
             </Link>
 
-            <div
-              className="relative"
-              onMouseEnter={() => setActiveDropdown('tours')}
-              onMouseLeave={() => setActiveDropdown(null)}
-            >
-              <Link
-                href="/tours"
-                className="px-4 py-2 text-stone-700 dark:text-stone-300 hover:text-emerald-600 dark:hover:text-[#C62828] font-medium transition-all duration-200 hover:bg-emerald-50 dark:hover:bg-[#C62828]/20 rounded-lg flex items-center space-x-1 group"
+            {/* Menú Desktop */}
+            <div className="hidden lg:flex items-center gap-x-8 text-sm font-semibold">
+              <Link href="/machu-picchu" className={`hover:text-[#FF9F1C] transition-colors ${isDark ? 'text-white' : 'text-[#3F2A1F]'}`}>Machu Picchu</Link>
+              <Link href="/trekking" className={`hover:text-[#FF9F1C] transition-colors ${isDark ? 'text-white' : 'text-[#3F2A1F]'}`}>Trekking</Link>
+              <Link href="/luxury" className={`hover:text-[#FF9F1C] transition-colors ${isDark ? 'text-white' : 'text-[#3F2A1F]'}`}>Luxury</Link>
+              <Link href="/tours-cusco" className={`hover:text-[#FF9F1C] transition-colors ${isDark ? 'text-white' : 'text-[#3F2A1F]'}`}>Tours Cusco</Link>
+              <Link href="/paquetes" className={`hover:text-[#FF9F1C] transition-colors ${isDark ? 'text-white' : 'text-[#3F2A1F]'}`}>Paquetes</Link>
+              <Link href="/blog" className={`hover:text-[#FF9F1C] transition-colors ${isDark ? 'text-white' : 'text-[#3F2A1F]'}`}>Blog</Link>
+              <Link href="/sobre-nosotros" className={`hover:text-[#FF9F1C] transition-colors ${isDark ? 'text-white' : 'text-[#3F2A1F]'}`}>Sobre Nosotros</Link>
+            </div>
+
+            {/* ==================== IDIOMAS + TEMA ==================== */}
+            <div className="flex items-center gap-4">
+
+              {/* Botones de idioma */}
+              <div className="flex bg-stone-100 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded-full p-1">
+                <button
+                  onClick={() => setLanguage('es')}
+                  className={`px-5 py-2 text-sm font-semibold rounded-full transition-all ${
+                    language === 'es' 
+                      ? 'bg-[#FF9F1C] text-[#1F120A] shadow-md' 
+                      : 'text-stone-700 dark:text-stone-300 hover:bg-white dark:hover:bg-stone-700'
+                  }`}
+                >
+                  ES
+                </button>
+                <button
+                  onClick={() => setLanguage('en')}
+                  className={`px-5 py-2 text-sm font-semibold rounded-full transition-all ${
+                    language === 'en' 
+                      ? 'bg-[#FF9F1C] text-[#1F120A] shadow-md' 
+                      : 'text-stone-700 dark:text-stone-300 hover:bg-white dark:hover:bg-stone-700'
+                  }`}
+                >
+                  EN
+                </button>
+              </div>
+
+              {/* Botón Tema */}
+              <button 
+                onClick={toggleTheme} 
+                className="p-3 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-all"
               >
-                <span>{t.nav.tours}</span>
-                <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${activeDropdown === 'tours' ? 'rotate-180' : ''}`} />
-              </Link>
-              <AnimatePresence>
-                {activeDropdown === 'tours' && <ToursDropdown onClose={() => setActiveDropdown(null)} />}
-              </AnimatePresence>
-            </div>
-
-            <div
-              className="relative"
-              onMouseEnter={() => setActiveDropdown('about')}
-              onMouseLeave={() => setActiveDropdown(null)}
-            >
-              <button className="px-4 py-2 text-stone-700 dark:text-stone-300 hover:text-emerald-600 dark:hover:text-[#C62828] font-medium transition-all duration-200 hover:bg-emerald-50 dark:hover:bg-[#C62828]/20 rounded-lg flex items-center space-x-1 group">
-                <span>{t.nav.about}</span>
-                <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${activeDropdown === 'about' ? 'rotate-180' : ''}`} />
+                {isDark ? <Sun className="w-5 h-5 text-white" /> : <Moon className="w-5 h-5 text-[#3F2A1F]" />}
               </button>
-              <AnimatePresence>
-                {activeDropdown === 'about' && <AboutDropdown onClose={() => setActiveDropdown(null)} />}
-              </AnimatePresence>
+
+              {/* Menú móvil */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className={`lg:hidden p-2 ${isDark ? 'text-white' : 'text-[#3F2A1F]'}`}
+              >
+                {mobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
+              </button>
             </div>
-
-            <Link
-              href="/testimonials"
-              className="px-4 py-2 text-stone-700 dark:text-stone-300 hover:text-[#C62828] font-medium transition-all duration-200 hover:bg-[#C62828]/10 dark:hover:bg-[#C62828]/20 rounded-lg"
-            >
-              {t.nav.testimonials}
-            </Link>
-
-            <button
-              onClick={() => scrollToSection('contact')}
-              className="px-4 py-2 text-stone-700 dark:text-stone-300 hover:text-[#C62828] font-medium transition-all duration-200 hover:bg-[#C62828]/10 dark:hover:bg-[#C62828]/20 rounded-lg"
-            >
-              {t.nav.contact}
-            </button>
           </div>
-
-          <div className="hidden lg:flex items-center space-x-3">
-            {mounted && (
-              <button
-                onClick={toggleTheme}
-                className="p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-[#2C1A0F] transition-all duration-200"
-                title={theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}
-              >
-                {theme === 'dark' ? (
-                  <Sun className="w-5 h-5 text-[#C62828]" />
-                ) : (
-                  <Moon className="w-5 h-5 text-stone-700" />
-                )}
-              </button>
-            )}
-
-            <div className="flex items-center bg-gradient-to-r from-stone-100 to-stone-50 dark:from-[#2C1A0F] dark:to-[#1F120A] rounded-xl p-1 shadow-inner">
-              <button
-                onClick={() => setLanguage('es')}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
-                  language === 'es'
-                    ? 'bg-gradient-to-r from-[#C62828] to-[#B71C1C] text-white shadow-md scale-105'
-                    : 'text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-[#2C1A0F]/50'
-                }`}
-              >
-                ES
-              </button>
-              <button
-                onClick={() => setLanguage('en')}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
-                  language === 'en'
-                    ? 'bg-gradient-to-r from-[#C62828] to-[#B71C1C] text-white shadow-md scale-105'
-                    : 'text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-[#2C1A0F]/50'
-                }`}
-              >
-                EN
-              </button>
-            </div>
-            <Button
-              onClick={() => scrollToSection('contact')}
-              className="bg-gradient-to-r from-[#C62828] via-[#D32F2F] to-[#B71C1C] hover:from-[#B71C1C] hover:via-[#C62828] hover:to-[#D32F2F] text-white shadow-lg hover:shadow-xl transition-all duration-300 px-6"
-            >
-              {t.nav.bookNow}
-            </Button>
-          </div>
-
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-[#2C1A0F] rounded-xl transition-colors"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
         </div>
       </div>
 
+      {/* Menú Móvil */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-white dark:bg-[#1F120A] border-t border-stone-200 dark:border-[#2C1A0F] shadow-xl"
+            className="lg:hidden bg-white dark:bg-black border-t"
           >
-            <div className="container mx-auto px-4 py-6 space-y-2">
-              <Link
-                href="/"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block w-full text-left px-4 py-3 text-stone-700 dark:text-stone-300 hover:bg-[#C62828]/10 dark:hover:bg-[#C62828]/20 hover:text-[#C62828] rounded-xl transition-all font-medium"
-              >
-                {t.nav.home}
-              </Link>
-              <Link
-                href="/tours"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block w-full text-left px-4 py-3 text-stone-700 dark:text-stone-300 hover:bg-[#C62828]/10 dark:hover:bg-[#C62828]/20 hover:text-[#C62828] rounded-xl transition-all font-medium"
-              >
-                {t.nav.tours}
-              </Link>
-              <button
-                onClick={() => scrollToSection('about')}
-                className="block w-full text-left px-4 py-3 text-stone-700 dark:text-stone-300 hover:bg-[#C62828]/10 dark:hover:bg-[#C62828]/20 hover:text-[#C62828] rounded-xl transition-all font-medium"
-              >
-                {t.nav.about}
-              </button>
-              <Link
-                href="/testimonials"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block w-full text-left px-4 py-3 text-stone-700 dark:text-stone-300 hover:bg-[#C62828]/10 dark:hover:bg-[#C62828]/20 hover:text-[#C62828] rounded-xl transition-all font-medium"
-              >
-                {t.nav.testimonials}
-              </Link>
-              <button
-                onClick={() => scrollToSection('contact')}
-                className="block w-full text-left px-4 py-3 text-stone-700 dark:text-stone-300 hover:bg-[#C62828]/10 dark:hover:bg-[#C62828]/20 hover:text-[#C62828] rounded-xl transition-all font-medium"
-              >
-                {t.nav.contact}
-              </button>
-
-              <div className="pt-4 border-t border-stone-200 dark:border-[#2C1A0F]">
-                {mounted && (
-                  <div className="mb-4">
-                    <div className="flex items-center justify-between px-4 py-3 bg-stone-50 dark:bg-[#2C1A0F] rounded-xl">
-                      <span className="text-sm font-medium text-stone-700 dark:text-stone-300">
-                        {theme === 'dark' ? 'Modo Oscuro' : 'Modo Claro'}
-                      </span>
-                      <button
-                        onClick={toggleTheme}
-                        className="p-2 rounded-lg bg-white dark:bg-[#1F120A] hover:bg-stone-100 dark:hover:bg-[#2C1A0F] transition-all"
-                      >
-                        {theme === 'dark' ? (
-                          <Sun className="w-5 h-5 text-[#C62828]" />
-                        ) : (
-                          <Moon className="w-5 h-5 text-stone-700" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                <div className="flex items-center space-x-2 mb-4">
-                  <button
-                    onClick={() => setLanguage('es')}
-                    className={`flex-1 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
-                      language === 'es'
-                        ? 'bg-gradient-to-r from-[#C62828] to-[#B71C1C] text-white shadow-md'
-                        : 'bg-stone-100 dark:bg-[#2C1A0F] text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-[#1F120A]'
-                    }`}
-                  >
-                    Español
-                  </button>
-                  <button
-                    onClick={() => setLanguage('en')}
-                    className={`flex-1 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
-                      language === 'en'
-                        ? 'bg-gradient-to-r from-[#C62828] to-[#B71C1C] text-white shadow-md'
-                        : 'bg-stone-100 dark:bg-[#2C1A0F] text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-[#1F120A]'
-                    }`}
-                  >
-                    English
-                  </button>
-                </div>
-                <Button
-                  onClick={() => scrollToSection('contact')}
-                  className="w-full bg-gradient-to-r from-[#C62828] to-[#B71C1C] hover:from-[#B71C1C] hover:to-[#D32F2F] text-white py-6 text-base font-semibold shadow-lg"
-                >
-                  {t.nav.bookNow}
-                </Button>
-              </div>
+            <div className="px-6 py-8 space-y-6 text-lg">
+              <Link href="/machu-picchu" className="block" onClick={() => setMobileMenuOpen(false)}>Machu Picchu</Link>
+              <Link href="/trekking" className="block" onClick={() => setMobileMenuOpen(false)}>Trekking</Link>
+              <Link href="/luxury" className="block" onClick={() => setMobileMenuOpen(false)}>Luxury</Link>
+              <Link href="/tours-cusco" className="block" onClick={() => setMobileMenuOpen(false)}>Tours Cusco</Link>
+              <Link href="/paquetes" className="block" onClick={() => setMobileMenuOpen(false)}>Paquetes</Link>
+              <Link href="/blog" className="block" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
+              <Link href="/sobre-nosotros" className="block" onClick={() => setMobileMenuOpen(false)}>Sobre Nosotros</Link>
             </div>
           </motion.div>
         )}
