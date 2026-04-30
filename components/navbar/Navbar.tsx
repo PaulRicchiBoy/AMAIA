@@ -3,11 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { Menu, X, ChevronDown, Sun, Moon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X, Sun, Moon, Phone } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export function Navbar() {
   const { language, setLanguage } = useLanguage();
@@ -17,120 +16,179 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 
   const isDark = mounted && theme === 'dark';
+  const accentRed = '#A82726';
+
+  const getMenuItems = (lang: 'es' | 'en') => {
+    if (lang === 'es') {
+      return [
+        { href: "/machu-picchu", label: "Machu Picchu" },
+        { href: "/trekking", label: "Trekking" },
+        { href: "/luxury", label: "Luxury" },
+        { href: "/tours-cusco", label: "Tours Cusco" },
+        { href: "/paquetes", label: "Paquetes" },
+        { href: "/blog", label: "Blog" },
+        { href: "/sobre-nosotros", label: "Sobre Nosotros" },
+      ];
+    } else {
+      return [
+        { href: "/machu-picchu", label: "Machu Picchu" },
+        { href: "/trekking", label: "Trekking" },
+        { href: "/luxury", label: "Luxury" },
+        { href: "/tours-cusco", label: "Cusco Tours" },
+        { href: "/paquetes", label: "Packages" },
+        { href: "/blog", label: "Blog" },
+        { href: "/sobre-nosotros", label: "About Us" },
+      ];
+    }
+  };
+
+  const menuItems = getMenuItems(language);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 80);
+    const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const handleWhatsApp = () => {
     const phone = '51987654321';
-    const msg = language === 'es' 
+    const msg = language === 'es'
       ? '¡Hola! Quiero más información sobre sus tours de lujo.'
       : 'Hello! I would like more information about your luxury tours.';
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50">
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isDark ? 'bg-black' : 'bg-white shadow-sm'} ${scrolled ? 'shadow-lg' : ''}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
 
-      {/* ==================== NAVBAR PRINCIPAL ==================== */}
-      <div className={`transition-all duration-300 border-b ${isDark ? 'bg-black' : 'bg-white shadow-sm'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-4 group">
-              <Image 
-                src="/logovacio-new.png" 
-                alt="AMAIA TOURS" 
-                width={140} 
-                height={140} 
-                className="h-20 w-auto transition-transform group-hover:scale-105" 
-                priority 
-              />
-              <div className="flex flex-col leading-none">
-                <span className={`text-4xl font-bold tracking-[-2px] ${isDark ? 'text-white' : 'text-[#3F2A1F]'}`}>AMAIA</span>
-                <span className="text-2xl font-light tracking-[3px] text-[#FF9F1C]">TOURS</span>
-              </div>
-            </Link>
-
-            {/* Menú Desktop */}
-            <div className="hidden lg:flex items-center gap-x-8 text-sm font-semibold">
-              <Link href="/machu-picchu" className={`hover:text-[#FF9F1C] transition-colors ${isDark ? 'text-white' : 'text-[#3F2A1F]'}`}>Machu Picchu</Link>
-              <Link href="/trekking" className={`hover:text-[#FF9F1C] transition-colors ${isDark ? 'text-white' : 'text-[#3F2A1F]'}`}>Trekking</Link>
-              <Link href="/luxury" className={`hover:text-[#FF9F1C] transition-colors ${isDark ? 'text-white' : 'text-[#3F2A1F]'}`}>Luxury</Link>
-              <Link href="/tours-cusco" className={`hover:text-[#FF9F1C] transition-colors ${isDark ? 'text-white' : 'text-[#3F2A1F]'}`}>Tours Cusco</Link>
-              <Link href="/paquetes" className={`hover:text-[#FF9F1C] transition-colors ${isDark ? 'text-white' : 'text-[#3F2A1F]'}`}>Paquetes</Link>
-              <Link href="/blog" className={`hover:text-[#FF9F1C] transition-colors ${isDark ? 'text-white' : 'text-[#3F2A1F]'}`}>Blog</Link>
-              <Link href="/sobre-nosotros" className={`hover:text-[#FF9F1C] transition-colors ${isDark ? 'text-white' : 'text-[#3F2A1F]'}`}>Sobre Nosotros</Link>
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-3 group">
+            <Image
+              src="/logo-r.png"
+              alt="AMAIA TOURS"
+              width={105}
+              height={105}
+              className="h-14 w-auto transition-transform group-hover:scale-105"
+              priority
+            />
+            <div className="flex flex-col leading-none -mt-1">
+              <span className={`text-3xl font-bold tracking-[-1.5px] ${isDark ? 'text-white' : 'text-[#3F2A1F]'}`}>AMAIA</span>
+              <span className="text-[18px] font-semibold tracking-[3px] -mt-1" style={{ color: accentRed }}>TOURS</span>
             </div>
+          </Link>
 
-            {/* ==================== IDIOMAS + TEMA ==================== */}
-            <div className="flex items-center gap-4">
-
-              {/* Botones de idioma */}
-              <div className="flex bg-stone-100 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded-full p-1">
-                <button
-                  onClick={() => setLanguage('es')}
-                  className={`px-5 py-2 text-sm font-semibold rounded-full transition-all ${
-                    language === 'es' 
-                      ? 'bg-[#FF9F1C] text-[#1F120A] shadow-md' 
-                      : 'text-stone-700 dark:text-stone-300 hover:bg-white dark:hover:bg-stone-700'
-                  }`}
-                >
-                  ES
-                </button>
-                <button
-                  onClick={() => setLanguage('en')}
-                  className={`px-5 py-2 text-sm font-semibold rounded-full transition-all ${
-                    language === 'en' 
-                      ? 'bg-[#FF9F1C] text-[#1F120A] shadow-md' 
-                      : 'text-stone-700 dark:text-stone-300 hover:bg-white dark:hover:bg-stone-700'
-                  }`}
-                >
-                  EN
-                </button>
-              </div>
-
-              {/* Botón Tema */}
-              <button 
-                onClick={toggleTheme} 
-                className="p-3 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-all"
+          {/* Menú Desktop */}
+          <div className="hidden lg:flex items-center gap-x-8 text-sm font-medium">
+            {menuItems.map((item) => (
+              <Link 
+                key={item.href}
+                href={item.href} 
+                className={`hover:text-[#A82726] transition-colors whitespace-nowrap ${isDark ? 'text-white' : 'text-[#3F2A1F]'}`}
               >
-                {isDark ? <Sun className="w-5 h-5 text-white" /> : <Moon className="w-5 h-5 text-[#3F2A1F]" />}
-              </button>
-
-              {/* Menú móvil */}
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className={`lg:hidden p-2 ${isDark ? 'text-white' : 'text-[#3F2A1F]'}`}
-              >
-                {mobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
-              </button>
-            </div>
+                {item.label}
+              </Link>
+            ))}
           </div>
+
+          {/* Derecha - Solo visible en desktop */}
+          <div className="hidden lg:flex items-center gap-3">
+
+            {/* Idioma */}
+            <div className="flex bg-gray-100 dark:bg-white/10 border border-gray-300 dark:border-white/20 rounded-full p-1">
+              <button
+                onClick={() => setLanguage('es')}
+                className={`px-3.5 py-1 text-xs font-semibold rounded-full transition-all ${language === 'es' ? 'bg-[#A82726] text-white' : isDark ? 'text-white/70 hover:text-white' : 'text-gray-600 hover:text-black'}`}
+              >
+                ES
+              </button>
+              <button
+                onClick={() => setLanguage('en')}
+                className={`px-3.5 py-1 text-xs font-semibold rounded-full transition-all ${language === 'en' ? 'bg-[#A82726] text-white' : isDark ? 'text-white/70 hover:text-white' : 'text-gray-600 hover:text-black'}`}
+              >
+                EN
+              </button>
+            </div>
+
+            {/* Botón Reservar */}
+            <button
+              onClick={handleWhatsApp}
+              className="flex items-center gap-2 bg-[#A82726] hover:bg-[#8B1E1E] text-white px-5 py-2.5 rounded-full text-sm font-semibold transition-all active:scale-[0.985]"
+            >
+              RESERVAR
+            </button>
+
+            {/* Tema */}
+            <button
+              onClick={toggleTheme}
+              className={`p-2.5 rounded-full transition-all cursor-pointer ${isDark ? 'hover:bg-white/10 text-white' : 'hover:bg-gray-200 text-[#3F2A1F]'}`}
+            >
+              {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
+          </div>
+
+          {/* Solo Hamburguesa en móvil */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className={`lg:hidden p-2 ${isDark ? 'text-white' : 'text-[#3F2A1F]'}`}
+          >
+            {mobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
+          </button>
         </div>
       </div>
 
-      {/* Menú Móvil */}
+      {/* Menú Móvil (ahora incluye Idioma + Reservar) */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-white dark:bg-black border-t"
+            className={`lg:hidden border-t ${isDark ? 'bg-black border-white/10' : 'bg-white border-gray-200'}`}
           >
             <div className="px-6 py-8 space-y-6 text-lg">
-              <Link href="/machu-picchu" className="block" onClick={() => setMobileMenuOpen(false)}>Machu Picchu</Link>
-              <Link href="/trekking" className="block" onClick={() => setMobileMenuOpen(false)}>Trekking</Link>
-              <Link href="/luxury" className="block" onClick={() => setMobileMenuOpen(false)}>Luxury</Link>
-              <Link href="/tours-cusco" className="block" onClick={() => setMobileMenuOpen(false)}>Tours Cusco</Link>
-              <Link href="/paquetes" className="block" onClick={() => setMobileMenuOpen(false)}>Paquetes</Link>
-              <Link href="/blog" className="block" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
-              <Link href="/sobre-nosotros" className="block" onClick={() => setMobileMenuOpen(false)}>Sobre Nosotros</Link>
+
+              {/* Links */}
+              {menuItems.map((item) => (
+                <Link 
+                  key={item.href}
+                  href={item.href} 
+                  className={`block transition-colors ${isDark ? 'text-white hover:text-[#A82726]' : 'text-[#3F2A1F] hover:text-[#A82726]'}`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+
+              {/* Idioma en móvil */}
+              <div className="pt-4 border-t border-gray-200 dark:border-white/10 flex justify-center">
+                <div className="flex bg-gray-100 dark:bg-white/10 border border-gray-300 dark:border-white/20 rounded-full p-1">
+                  <button
+                    onClick={() => { setLanguage('es'); setMobileMenuOpen(false); }}
+                    className={`px-4 py-1.5 text-sm font-semibold rounded-full transition-all ${language === 'es' ? 'bg-[#A82726] text-white' : isDark ? 'text-white/70' : 'text-gray-600'}`}
+                  >
+                    ES
+                  </button>
+                  <button
+                    onClick={() => { setLanguage('en'); setMobileMenuOpen(false); }}
+                    className={`px-4 py-1.5 text-sm font-semibold rounded-full transition-all ${language === 'en' ? 'bg-[#A82726] text-white' : isDark ? 'text-white/70' : 'text-gray-600'}`}
+                  >
+                    EN
+                  </button>
+                </div>
+              </div>
+
+              {/* Botón Reservar en móvil */}
+              <div className="pt-2">
+                <button
+                  onClick={() => { handleWhatsApp(); setMobileMenuOpen(false); }}
+                  className="w-full flex items-center justify-center gap-2 bg-[#A82726] hover:bg-[#8B1E1E] text-white py-3.5 rounded-full font-semibold text-lg"
+                >
+                  RESERVAR AHORA
+                </button>
+              </div>
+
             </div>
           </motion.div>
         )}

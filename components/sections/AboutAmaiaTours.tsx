@@ -13,32 +13,11 @@ export function AboutAMAIA() {
   return (
     <section id="about" className={`relative py-24 lg:py-32 ${isDark ? 'bg-black' : 'bg-white'}`}>
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-16 items-start">
           
-          {/* === COLUMNA IZQUIERDA: VIDEO === */}
+          {/* === COLUMNA IZQUIERDA: SOLO TEXTO === */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9 }}
-            className="relative"
-          >
-            <div className="aspect-video lg:aspect-square rounded-3xl overflow-hidden shadow-2xl border border-[#D4AF37]/20">
-              <video
-                className="w-full h-full object-cover"
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="auto"
-                src="/aboutvideo.mp4"
-              />
-            </div>
-          </motion.div>
-
-          {/* === COLUMNA DERECHA: TEXTO === */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.9 }}
@@ -66,26 +45,48 @@ export function AboutAMAIA() {
                 ? 'Con grupos muy pequeños, guías locales expertos y un servicio de alto nivel, creamos experiencias únicas que conectan al viajero con la esencia más auténtica de los Andes y el Perú.'
                 : 'With very small groups, expert local guides and high-level service, we create unique experiences that connect the traveler with the most authentic essence of the Andes and Peru.'}
             </p>
+          </motion.div>
 
-            {/* Botón final */}
+          {/* === COLUMNA DERECHA: VIDEO + BOTÓN === */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9 }}
+            className="space-y-8"
+          >
+            {/* Video */}
+            <div className="aspect-video lg:aspect-square rounded-3xl overflow-hidden shadow-2xl border border-[#A82726]/20">
+              <video
+                className="w-full h-full object-cover"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                src="/herovideo.mp4"
+              />
+            </div>
+
+            {/* Botón después del video */}
             <motion.div
               initial={{ y: 30, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="mt-12"
+              transition={{ duration: 0.8, delay: 0.3 }}
             >
               <button
                 onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                className={`px-10 py-4 text-lg font-semibold rounded-3xl transition-all hover:scale-105 ${
+                className={`w-full lg:w-auto px-10 py-4 text-lg font-semibold rounded-3xl transition-all hover:scale-105 ${
                   isDark 
                     ? 'bg-white text-[#2C1708] hover:bg-white/90' 
-                    : 'bg-[#FF9F1C] text-[#2C1708] hover:bg-[#FFB74C]'
+                    : 'bg-[#A82726] text-white hover:bg-[#8B1E1E]'
                 }`}
               >
                 {language === 'es' ? 'Conoce nuestra historia' : 'Learn our story'}
               </button>
             </motion.div>
           </motion.div>
+
         </div>
       </div>
     </section>
